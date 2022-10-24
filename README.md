@@ -2,7 +2,7 @@
 A Flask api to make changes in the postgresql using excel as input. There will be always a unique id in the excel, I need to update the data related to that id, means replace all data in two tables related to that unique id in excel.
 
 ### Pre-condition:
-- Computer has installed python3, and postgresql
+- Computer has installed python3, create user sammy (or root), create database flask_db.
 
 ### Steps to install the app:
 - Step 1: Create a local environment for python
