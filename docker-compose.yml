@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  web:
+    build: flask-on-docker/services/web
+    command: python manage.py run -h 0.0.0.0
+    volumes:
+      - ./services/web/:/usr/src/app/
+    ports:
+      - 9010:9010
+    env_file:
+      - flask-on-docker/.env.dev
