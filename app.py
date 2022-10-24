@@ -53,17 +53,22 @@ def upload_file():
                 for book in cur.fetchall():
                     book_id = int(df['book_id'][i])
                     if book_id == book[0]:
-                        sql_update_query = """UPDATE books SET title = %s, author = %s, pages_num = %s, review = %s where id = %s"""
-                        cur.execute(sql_update_query,
+                        # Delete book from books tables
+                        cur.execute('DELETE FROM books WHERE id = %s;', (book_id,))
+                        cur.execute('DELETE FROM categories WHERE book_id = %s;', (book_id,))
+
+                        cur.execute('INSERT INTO books (title, author, pages_num, review)'
+                                    'VALUES (%s, %s, %s, %s) RETURNING id;',
                                     (df['title'][i],
                                      df['author'][i],
                                      int(df['pages_number'][i]),
-                                     df['review'][i],
-                                     book_id)
+                                     df['review'][i])
                                     )
-
-                        sql_update_query = """UPDATE categories SET name = %s where book_id = %s"""
-                        cur.execute(sql_update_query, (df['name'][i], book_id))
+                        id_of_new_row = cur.fetchone()[0]
+                        cur.execute('INSERT INTO categories (name, book_id)'
+                                    'VALUES (%s, %s)',
+                                    (df['name'][i], id_of_new_row)
+                                    )
 
             conn.commit()
             cur.close()
